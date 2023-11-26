@@ -1,0 +1,57 @@
+##################################
+## 확률과 통계 과제             ##
+## 고려대학교                   ##
+## 서민석                       ##
+## 2021270678 나강민 질문1      ##
+##################################
+
+## 라이브러리 및 저장소 설정
+setRepositories(ind = 1:7)
+
+# 패키지 설치
+install.packages("BSDA")
+
+## 라이브러리 불러오기
+library(devtools)
+library(BSDA)
+
+# 데이터 불러오기
+data <- read.table("/Users/mac_nkm/Documents/GitHub/Probability_Statistics_KUS/HomeWork2/Data.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE) 
+
+# 코로나에 걸린 사람의 데이터 분리
+data_infected <- subset(data, Disease == "COVID19")  
+
+# z-test 수행
+mu0 <- 128.65  # 국립보건원에서 정한 정상인의 수축기 혈압 평균
+sigma <- 16.5  # 국립보건원에서 정한 정상인의 수축기 혈압 표준편차
+n <- nrow(data_infected)  # 코로나에 걸린 사람의 수
+xbar <- mean(data_infected$sysBP)  # 코로나에 걸린 사람들의 수축기 혈압 평균
+se <- sigma / sqrt(n)  # 표준 오차
+z <- (xbar - mu0) / se  # 검정 통계량 계산
+
+# p-value 계산
+p_value <- 2 * pnorm(-abs(z))
+
+# 결과 출력
+cat("검정 통계량:", z, "
+")
+cat("p-value:", p_value, "
+")
+
+# 5% 유의 수준에서 의사결정
+if (p_value < 0.05) {
+  cat("5%의 유의 수준에서, 귀무 가설을 기각하고 대립 가설을 선택합니다. 즉, 코로나에 걸린 사람들의 수축기 혈압이 정상인의 혈압과 통계적으로 유의미하게 다릅니다.
+")
+} else {
+  cat("5%의 유의 수준에서, 귀무 가설을 기각하지 않습니다. 즉, 코로나에 걸린 사람들의 수축기 혈압이 정상인의 혈압과 통계적으로 유의미한 차이가 없습니다.
+")
+}
+
+# 귀무 가설(H0): 코로나에 걸린 사람들의 수축기 혈압이 정상인의 혈압과 같다. ("Collected Samples are not biased")
+# 대립 가설(H1): 코로나에 걸린 사람들의 수축기 혈압이 정상인의 혈압과 다르다. ("The sample collected will be different from the population")
+
+# 만약 p-value가 0.05보다 작다면, 5%의 유의 수준에서 귀무 가설을 기각하고 대립 가설을 선택합니다. 
+# 이는 코로나에 걸린 사람들의 수축기 혈압이 정상인의 혈압과 통계적으로 유의미하게 다르다는 것을 의미합니다.
+
+# 반대로, p-value가 0.05보다 크다면, 5%의 유의 수준에서 귀무 가설을 기각하지 않습니다. 
+# 이는 코로나에 걸린 사람들의 수축기 혈압이 정상인의 혈압과 통계적으로 유의미한 차이가 없다는 것을 의미합니다.
