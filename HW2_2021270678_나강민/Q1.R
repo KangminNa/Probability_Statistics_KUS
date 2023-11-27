@@ -10,6 +10,8 @@ setRepositories(ind = 1:7)
 
 # 패키지 설치
 # install.packages("BSDA")
+#install.packages("devtools")
+
 
 ## 라이브러리 불러오기
 library(devtools)
